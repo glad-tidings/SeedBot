@@ -1,0 +1,2 @@
+# SeedBot
+SeedBot Auto Farm
