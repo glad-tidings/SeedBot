@@ -1,0 +1,34 @@
+﻿[
+      {
+        "Index": 0,
+        "Name": "Account 1",
+        "Auth": "query_id of Account 1",
+        "Active": true,
+        "DailyReward": true,
+        "Seed": true,
+        "Worm": true,
+        "Egg": true,
+        "Bird": true,
+        "Boost": true,
+        "Task": true,
+        "TaskSleep": [ 7, 20 ],
+        "DaySleep": [ 6000, 8000 ],
+        "NightSleep": [ 12000, 15000 ]
+      },
+      {
+        "Index": 1,
+        "Name": "Account 2",
+        "Auth": "query_id of Account 2",
+        "Active": true,
+        "DailyReward": true,
+        "Seed": true,
+        "Worm": true,
+        "Egg": true,
+        "Bird": true,
+        "Boost": true,
+        "Task": true,
+        "TaskSleep": [ 7, 20 ],
+        "DaySleep": [ 6000, 8000 ],
+        "NightSleep": [ 12000, 15000 ]
+      }
+]
