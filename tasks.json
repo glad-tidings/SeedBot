@@ -26,5 +26,9 @@
   {
     "name": "News affecting the BTC price",
     "answer": "BTCTOTHEMOON"
+  },
+  {
+    "name": "On-chain vs Off-chain #8",
+    "answer": "TRANSACTION"
   }
 ]
