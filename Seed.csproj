@@ -8,7 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="TelegramMiniApp" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="data.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="proxy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

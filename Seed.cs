@@ -6,10 +6,15 @@ namespace Seed
     public class SeedQuery
     {
         [JsonPropertyName("Index")]
-        public long Index { get; set; }
+        public int Index { get; set; }
         [JsonPropertyName("Name")]
         public string Name { get; set; } = string.Empty;
-        [JsonPropertyName("Auth")]
+        [JsonPropertyName("API_ID")]
+        public string API_ID { get; set; } = string.Empty;
+        [JsonPropertyName("API_HASH")]
+        public string API_HASH { get; set; } = string.Empty;
+        [JsonPropertyName("Phone")]
+        public string Phone { get; set; } = string.Empty;
         public string Auth { get; set; } = string.Empty;
         [JsonPropertyName("Active")]
         public bool Active { get; set; }

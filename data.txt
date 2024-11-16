@@ -1,8 +1,10 @@
 ﻿[
       {
         "Index": 0,
-        "Name": "Account 1",
-        "Auth": "query_id of Account 1",
+        "Name": "Account1",
+        "API_ID": "",
+        "API_HASH": "",
+        "Phone": "+12223334455",
         "Active": true,
         "DailyReward": true,
         "Seed": true,
@@ -17,8 +19,10 @@
       },
       {
         "Index": 1,
-        "Name": "Account 2",
-        "Auth": "query_id of Account 2",
+        "Name": "Account2",
+        "API_ID": "",
+        "API_HASH": "",
+        "Phone": "+12223334455",
         "Active": true,
         "DailyReward": true,
         "Seed": true,

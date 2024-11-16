@@ -20,6 +20,7 @@ namespace Seed
             PubQuery = Query;
             PubProxy = Proxy;
             IPAddress = GetIP().Result;
+            PubQuery.Auth = getSession();
             var GetUserDetail = SeedGetProfile2().Result;
             if (GetUserDetail is not null)
             {
@@ -74,10 +75,23 @@ namespace Seed
             return "";
         }
 
+        private string getSession()
+        {
+            var vw = new TelegramMiniApp.WebView(PubQuery.API_ID, PubQuery.API_HASH, PubQuery.Name, PubQuery.Phone, "seed_coin_bot", "https://cf.seeddao.org/");
+            string url = vw.Get_URL().Result;
+
+            if (url != string.Empty)
+            {
+                return url.Split(new string[] { "tgWebAppData=" }, StringSplitOptions.None)[0].Split(new string[] { "&tgWebAppVersion" }, StringSplitOptions.None)[0];
+            }
+
+            return string.Empty;
+        }
+
         private async Task<SeedProfile2Response?> SeedGetProfile2()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/profile2");
+            var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/profile2");
             if (httpResponse is not null)
             {
                 if (httpResponse.IsSuccessStatusCode)
@@ -94,7 +108,7 @@ namespace Seed
         public async Task<SeedBalanceResponse?> SeedGetBalance()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/profile/balance");
+            var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/profile/balance");
             if (httpResponse is not null)
             {
                 if (httpResponse.IsSuccessStatusCode)
@@ -111,13 +125,13 @@ namespace Seed
         public async Task<SeedStreakRewardResponse?> SeedDailyReward()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var loginBonuses = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/login-bonuses", null);
+            var loginBonuses = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/login-bonuses", null);
             if (loginBonuses is not null)
             {
                 if (loginBonuses.IsSuccessStatusCode)
                 {
                     Thread.Sleep(3000);
-                    var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/streak-reward");
+                    var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/streak-reward");
                     if (httpResponse is not null)
                     {
                         if (httpResponse.IsSuccessStatusCode)
@@ -139,7 +153,7 @@ namespace Seed
             var request = new SeedStreakRewardRequest() { StreakRewardIds = streakRewardIds };
             string serializedRequest = JsonSerializer.Serialize(request);
             var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
-            var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/streak-reward", serializedRequestContent);
+            var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/streak-reward", serializedRequestContent);
             if (httpResponse is not null)
                 return httpResponse.IsSuccessStatusCode;
             else
@@ -149,7 +163,7 @@ namespace Seed
         public async Task<bool> SeedClaimSeed()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/seed/claim", null);
+            var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/seed/claim", null);
             if (httpResponse is not null)
                 return httpResponse.IsSuccessStatusCode;
             else
@@ -159,7 +173,7 @@ namespace Seed
         public async Task<SeedWormsResponse?> SeedWorms()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/worms");
+            var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/worms");
             if (httpResponse is not null)
             {
                 if (httpResponse.IsSuccessStatusCode)
@@ -176,7 +190,7 @@ namespace Seed
         public async Task<bool> SeedClaimWorm()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/worms/catch", null);
+            var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/worms/catch", null);
             if (httpResponse is not null)
                 return httpResponse.IsSuccessStatusCode;
             else
@@ -186,7 +200,7 @@ namespace Seed
         public async Task<bool> SeedClaimEgg()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/give-first-egg", null);
+            var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/give-first-egg", null);
             if (httpResponse is not null)
                 return httpResponse.IsSuccessStatusCode;
             else
@@ -196,7 +210,7 @@ namespace Seed
         public async Task<SeedTasksResponse?> SeedTasks()
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/tasks/progresses");
+            var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/tasks/progresses");
             if (httpResponse is not null)
             {
                 if (httpResponse.IsSuccessStatusCode)
@@ -213,7 +227,7 @@ namespace Seed
         public async Task<bool> SeedDoneTask(string taskId)
         {
             var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
-            var httpResponse = await SAPI.SAPIPost($"https://alb.seeddao.org/api/v1/tasks/{taskId}", null);
+            var httpResponse = await SAPI.SAPIPost($"https://elb.seeddao.org/api/v1/tasks/{taskId}", null);
             if (httpResponse is not null)
                 return httpResponse.IsSuccessStatusCode;
             else

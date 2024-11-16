@@ -5,7 +5,7 @@ namespace Seed
     static class Program
     {
 
-        private static ProxyType[] proxies;
+        private static ProxyType[]? proxies;
 
         static List<SeedQuery>? LoadQuery()
         {
@@ -33,16 +33,44 @@ namespace Seed
 
         static void Main(string[] args)
         {
-            Console.WriteLine("----------------------- Seed Bot Starting -----------------------");
+            Console.WriteLine("  ____                _ ____   ___ _____ \r\n / ___|  ___  ___  __| | __ ) / _ \\_   _|\r\n \\___ \\ / _ \\/ _ \\/ _` |  _ \\| | | || |  \r\n  ___) |  __/  __/ (_| | |_) | |_| || |  \r\n |____/ \\___|\\___|\\__,_|____/ \\___/ |_|  \r\n                                         ");
             Console.WriteLine();
+            Console.WriteLine("Github: https://github.com/glad-tidings/SeedBot");
+            Console.WriteLine();
+            Console.Write("Select an option:\n1. Run bot\n2. Create session\n> ");
+            string? opt = Console.ReadLine();
 
             var SeedQueries = LoadQuery();
             proxies = LoadProxy();
 
-            foreach (var Query in SeedQueries ?? [])
+            if (opt != null)
             {
-                var BotThread = new Thread(() => SeedThread(Query)); BotThread.Start();
-                Thread.Sleep(60000);
+                if (opt == "1")
+                {
+                    foreach (var Query in SeedQueries ?? [])
+                    {
+                        var BotThread = new Thread(() => SeedThread(Query)); BotThread.Start();
+                        Thread.Sleep(60000);
+                    }
+                }
+                else
+                {
+                    foreach (var Query in SeedQueries ?? [])
+                    {
+                        if (!File.Exists(@$"sessions\{Query.Name}.session"))
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine($"Create session for account {Query.Name} ({Query.Phone})");
+                            TelegramMiniApp.WebView vw = new(Query.API_ID, Query.API_HASH, Query.Name, Query.Phone, "", "");
+                            if (vw.Save_Session().Result)
+                                Console.WriteLine("Session created");
+                            else
+                                Console.WriteLine("Create session failed");
+                        }
+                    }
+
+                    Environment.Exit(0);
+                }
             }
         }
 
@@ -54,7 +82,7 @@ namespace Seed
 
                 try
                 {
-                    var Bot = new SeedBot(Query, proxies);
+                    var Bot = new SeedBot(Query, proxies ?? []);
                     if (!Bot.HasError)
                     {
                         Log.Show("Seed", Query.Name, $"my ip '{Bot.IPAddress}'", ConsoleColor.White);
@@ -90,7 +118,7 @@ namespace Seed
 
                             if (Query.Seed)
                             {
-                                if (Bot.UserDetail.Data.LastClaim.ToLocalTime().AddHours(1d) < DateTime.Now)
+                                if (Bot.UserDetail.Data?.LastClaim.ToLocalTime().AddHours(1d) < DateTime.Now)
                                 {
                                     bool claimSeed = await Bot.SeedClaimSeed();
                                     if (claimSeed)
@@ -139,7 +167,7 @@ namespace Seed
                                 var tasks = await Bot.SeedTasks();
                                 if (tasks is not null)
                                 {
-                                    foreach (var task in tasks.Data.Where(x => x.Type == "Join community" | x.Type == "Follow us" | x.Type == "TG story" | x.Type == "Play app"))
+                                    foreach (var task in tasks.Data?.Where(x => x.Type == "Join community" | x.Type == "Follow us" | x.Type == "TG story" | x.Type == "Play app") ?? [])
                                     {
                                         if (task.TaskUser is null)
                                         {
