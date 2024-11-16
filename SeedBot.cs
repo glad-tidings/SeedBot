@@ -90,7 +90,7 @@ namespace Seed
 
         private async Task<SeedProfile2Response?> SeedGetProfile2()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/profile2");
             if (httpResponse is not null)
             {
@@ -107,7 +107,7 @@ namespace Seed
 
         public async Task<SeedBalanceResponse?> SeedGetBalance()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/profile/balance");
             if (httpResponse is not null)
             {
@@ -124,7 +124,7 @@ namespace Seed
 
         public async Task<SeedStreakRewardResponse?> SeedDailyReward()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var loginBonuses = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/login-bonuses", null);
             if (loginBonuses is not null)
             {
@@ -149,7 +149,7 @@ namespace Seed
 
         public async Task<bool> SeedClaimDailyReward(List<string> streakRewardIds)
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var request = new SeedStreakRewardRequest() { StreakRewardIds = streakRewardIds };
             string serializedRequest = JsonSerializer.Serialize(request);
             var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
@@ -162,17 +162,17 @@ namespace Seed
 
         public async Task<bool> SeedClaimSeed()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/seed/claim", null);
-            if (httpResponse is not null)
+            if (httpResponse != null)
                 return httpResponse.IsSuccessStatusCode;
-            else
-                return false;
+
+            return false;
         }
 
         public async Task<SeedWormsResponse?> SeedWorms()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/worms");
             if (httpResponse is not null)
             {
@@ -189,27 +189,27 @@ namespace Seed
 
         public async Task<bool> SeedClaimWorm()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/worms/catch", null);
-            if (httpResponse is not null)
+            if (httpResponse != null)
                 return httpResponse.IsSuccessStatusCode;
-            else
-                return false;
+
+            return false;
         }
 
         public async Task<bool> SeedClaimEgg()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIPost("https://elb.seeddao.org/api/v1/give-first-egg", null);
-            if (httpResponse is not null)
+            if (httpResponse != null)
                 return httpResponse.IsSuccessStatusCode;
-            else
-                return false;
+
+            return false;
         }
 
         public async Task<SeedTasksResponse?> SeedTasks()
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://elb.seeddao.org/api/v1/tasks/progresses");
             if (httpResponse is not null)
             {
@@ -226,13 +226,55 @@ namespace Seed
 
         public async Task<bool> SeedDoneTask(string taskId)
         {
-            var SAPI = new SeedApi(PubQuery.Auth, (int)PubQuery.Index, PubProxy);
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIPost($"https://elb.seeddao.org/api/v1/tasks/{taskId}", null);
-            if (httpResponse is not null)
+            if (httpResponse != null)
                 return httpResponse.IsSuccessStatusCode;
-            else
-                return false;
+
+            return false;
         }
 
+        public async Task<SeedGuildResponse?> SeedGuild()
+        {
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
+            var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/guild/member/detail");
+            if (httpResponse is not null)
+            {
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    var responseStream = await httpResponse.Content.ReadAsStreamAsync();
+                    var responseJson = await JsonSerializer.DeserializeAsync<SeedGuildResponse>(responseStream);
+                    return responseJson;
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<bool> SeedGuildLeave(string guildId)
+        {
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
+            var request = new SeedGuildRequest() { GuildId = guildId };
+            string serializedRequest = JsonSerializer.Serialize(request);
+            var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+            var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/guild/leave", serializedRequestContent);
+            if (httpResponse != null)
+                return httpResponse.IsSuccessStatusCode;
+
+            return false;
+        }
+
+        public async Task<bool> SeedGuildJoin(string guildId)
+        {
+            var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
+            var request = new SeedGuildRequest() { GuildId = guildId };
+            string serializedRequest = JsonSerializer.Serialize(request);
+            var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
+            var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/guild/join", serializedRequestContent);
+            if (httpResponse != null)
+                return httpResponse.IsSuccessStatusCode;
+
+            return false;
+        }
     }
 }

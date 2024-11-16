@@ -152,6 +152,32 @@ namespace Seed
         public bool Completed { get; set; }
     }
 
+    public class SeedGuildResponse
+    {
+        [JsonPropertyName("data")]
+        public SeedGuildData? Data { get; set; }
+    }
+
+    public class SeedGuildData
+    {
+        [JsonPropertyName("guild_id")]
+        public string GuildId { get; set; } = string.Empty;
+        [JsonPropertyName("member_id")]
+        public string MemberId { get; set; } = string.Empty;
+        [JsonPropertyName("hunted")]
+        public long Hunted { get; set; }
+        [JsonPropertyName("is_master")]
+        public bool IsMaster { get; set; }
+        [JsonPropertyName("member_rank")]
+        public int MemberRank { get; set; }
+    }
+
+    public class SeedGuildRequest
+    {
+        [JsonPropertyName("guild_id")]
+        public string GuildId { get; set; } = string.Empty;
+    }
+
     public class ProxyType
     {
         [JsonPropertyName("Index")]

@@ -92,6 +92,33 @@ namespace Seed
                         if (Sync is not null)
                         {
                             Log.Show("Seed", Query.Name, $"synced successfully. B<{((double)Sync.Data / 1000000000d).ToString("N2")}>", ConsoleColor.Blue);
+                            var guild = await Bot.SeedGuild();
+                            if (guild is not null)
+                            {
+                                if (string.IsNullOrEmpty(guild.Data?.GuildId))
+                                {
+                                    bool joinGuild = await Bot.SeedGuildJoin("22058e04-9f2b-44c8-9c78-e6f1bc41cbb2");
+                                    if (joinGuild)
+                                        Log.Show("Seed", Query.Name, $"join guild successfully", ConsoleColor.Green);
+                                    else
+                                        Log.Show("Seed", Query.Name, $"join guild failed", ConsoleColor.Red);
+                                }
+                                else if (guild.Data.GuildId != "22058e04-9f2b-44c8-9c78-e6f1bc41cbb2")
+                                {
+                                    bool leaveGuild = await Bot.SeedGuildLeave(guild.Data.GuildId);
+                                    if (leaveGuild)
+                                    {
+                                        bool joinGuild = await Bot.SeedGuildJoin("22058e04-9f2b-44c8-9c78-e6f1bc41cbb2");
+                                        if (joinGuild)
+                                            Log.Show("Seed", Query.Name, $"join guild successfully", ConsoleColor.Green);
+                                        else
+                                            Log.Show("Seed", Query.Name, $"join guild failed", ConsoleColor.Red);
+                                    }
+                                }
+
+                                Thread.Sleep(3000);
+                            }
+
                             if (Query.DailyReward)
                             {
                                 var dailyReward = await Bot.SeedDailyReward();
