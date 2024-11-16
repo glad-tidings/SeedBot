@@ -13,15 +13,17 @@ I am not responsible for your account. Please consider the potential risks befor
 | Auto Claim Worm           | ✅        |
 | Auto Claim Egg            | ✅        |
 | Multi Proxy               | ✅        |
+| Auto Query ID             | ✅        |
+| Auto Join Guild           | ✅        |
 
 ## Releases
 [Download BOT](https://github.com/glad-tidings/SeedBot/releases)
 
 ## Settings
-Enter all query_id in data.txt file and add proxies in proxy.txt(e.g. socks5://10.10.10.10:1080)
+Enter all account phone number and api_id and api_hash in data.txt file and add proxies in proxy.txt(e.g. socks5://10.10.10.10:1080)
 
-## QueryID Script
-Script to request query_id of all your Telegram accounts for any mini Telegram Bot App ==> [TelegramMiniAppQueryID](https://github.com/glad-tidings/TelegramMiniAppQueryID)
+## Telegram API
+You can get api_id and api_hash from [Telegram API](https://my.telegram.org)
 
 ## ☕Buy me a coffee
 ```
