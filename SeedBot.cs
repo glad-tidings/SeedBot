@@ -48,9 +48,7 @@ namespace Seed
                     client = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, 30) };
                 }
                 else
-                {
                     client = new HttpClient() { Timeout = new TimeSpan(0, 0, 30) };
-                }
             }
             else
             {
@@ -81,9 +79,7 @@ namespace Seed
             string url = vw.Get_URL().Result;
 
             if (url != string.Empty)
-            {
-                return url.Split(new string[] { "tgWebAppData=" }, StringSplitOptions.None)[0].Split(new string[] { "&tgWebAppVersion" }, StringSplitOptions.None)[0];
-            }
+                return url.Split(new string[] { "tgWebAppData=" }, StringSplitOptions.None)[1].Split(new string[] { "&tgWebAppVersion" }, StringSplitOptions.None)[0];
 
             return string.Empty;
         }
