@@ -66,5 +66,9 @@
   {
     "name": "#17 What is Listing?",
     "answer": "SEEDTOKEN"
+  },
+  {
+    "name": "#18 What Affects Token Price?",
+    "answer": "POSINEGATIVE"
   }
 ]
