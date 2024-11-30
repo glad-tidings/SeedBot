@@ -70,5 +70,9 @@
   {
     "name": "#18 What Affects Token Price?",
     "answer": "POSINEGATIVE"
+  },
+  {
+    "name": "#19 What is Market Maker?",
+    "answer": "WAVEMAKER"
   }
 ]
