@@ -89,24 +89,15 @@ namespace Seed
                         Query = Bot.PubQuery;
                         Log.Show("Seed", Query.Name, $"login successfully.", ConsoleColor.Green);
                         var Sync = await Bot.SeedGetBalance();
-                        if (Sync is not null)
+                        if (Sync != null)
                         {
                             Log.Show("Seed", Query.Name, $"synced successfully. B<{((double)Sync.Data / 1000000000d).ToString("N2")}>", ConsoleColor.Blue);
                             var guild = await Bot.SeedGuild();
-                            if (guild is not null)
+                            if (guild != null)
                             {
-                                if (string.IsNullOrEmpty(guild.Data?.GuildId))
+                                if (guild.Data != null)
                                 {
-                                    bool joinGuild = await Bot.SeedGuildJoin("22058e04-9f2b-44c8-9c78-e6f1bc41cbb2");
-                                    if (joinGuild)
-                                        Log.Show("Seed", Query.Name, $"join guild successfully", ConsoleColor.Green);
-                                    else
-                                        Log.Show("Seed", Query.Name, $"join guild failed", ConsoleColor.Red);
-                                }
-                                else if (guild.Data.GuildId != "22058e04-9f2b-44c8-9c78-e6f1bc41cbb2")
-                                {
-                                    bool leaveGuild = await Bot.SeedGuildLeave(guild.Data.GuildId);
-                                    if (leaveGuild)
+                                    if (string.IsNullOrEmpty(guild.Data?.GuildId))
                                     {
                                         bool joinGuild = await Bot.SeedGuildJoin("22058e04-9f2b-44c8-9c78-e6f1bc41cbb2");
                                         if (joinGuild)
@@ -114,6 +105,26 @@ namespace Seed
                                         else
                                             Log.Show("Seed", Query.Name, $"join guild failed", ConsoleColor.Red);
                                     }
+                                    else if (guild.Data.GuildId != "22058e04-9f2b-44c8-9c78-e6f1bc41cbb2")
+                                    {
+                                        bool leaveGuild = await Bot.SeedGuildLeave(guild.Data.GuildId);
+                                        if (leaveGuild)
+                                        {
+                                            bool joinGuild = await Bot.SeedGuildJoin("22058e04-9f2b-44c8-9c78-e6f1bc41cbb2");
+                                            if (joinGuild)
+                                                Log.Show("Seed", Query.Name, $"join guild successfully", ConsoleColor.Green);
+                                            else
+                                                Log.Show("Seed", Query.Name, $"join guild failed", ConsoleColor.Red);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    bool joinGuild = await Bot.SeedGuildJoin("22058e04-9f2b-44c8-9c78-e6f1bc41cbb2");
+                                    if (joinGuild)
+                                        Log.Show("Seed", Query.Name, $"join guild successfully", ConsoleColor.Green);
+                                    else
+                                        Log.Show("Seed", Query.Name, $"join guild failed", ConsoleColor.Red);
                                 }
 
                                 Thread.Sleep(3000);
@@ -122,9 +133,9 @@ namespace Seed
                             if (Query.DailyReward)
                             {
                                 var dailyReward = await Bot.SeedDailyReward();
-                                if (dailyReward is not null)
+                                if (dailyReward != null)
                                 {
-                                    if (dailyReward.Data is not null)
+                                    if (dailyReward.Data != null)
                                     {
                                         if (dailyReward.Data.Count > 0)
                                         {
@@ -160,9 +171,9 @@ namespace Seed
                             if (Query.Worm)
                             {
                                 var worms = await Bot.SeedWorms();
-                                if (worms is not null)
+                                if (worms != null)
                                 {
-                                    if (worms.Data is not null)
+                                    if (worms.Data != null)
                                     {
                                         if (worms.Data.CreatedAt.ToLocalTime() < DateTime.Now & !worms.Data.IsCaught)
                                         {
@@ -178,7 +189,7 @@ namespace Seed
                                 }
                             }
 
-                            if (Query.Egg & !Bot.UserDetail.Data.GiveFirstEgg)
+                            if (Query.Egg & !Bot.UserDetail.Data?.GiveFirstEgg ?? false)
                             {
                                 bool egg = await Bot.SeedClaimEgg();
                                 if (egg)
@@ -192,19 +203,19 @@ namespace Seed
                             if (Query.Task)
                             {
                                 var tasks = await Bot.SeedTasks();
-                                if (tasks is not null)
+                                if (tasks != null)
                                 {
                                     foreach (var task in tasks.Data?.Where(x => x.Type == "Join community" | x.Type == "Follow us" | x.Type == "TG story" | x.Type == "Play app") ?? [])
                                     {
                                         if (task.TaskUser is null)
                                         {
                                             var doneTask = Bot.SeedDoneTask(task.Id);
-                                            if (doneTask is not null)
+                                            if (doneTask != null)
                                                 Log.Show("Seed", Query.Name, $"task '{task.Name}' started", ConsoleColor.Green);
                                             else
                                                 Log.Show("Seed", Query.Name, $"start task '{task.Name}' failed", ConsoleColor.Red);
 
-                                            int eachtaskRND = RND.Next(Query.TaskSleep[0], Query.TaskSleep[1]);
+                                            int eachtaskRND = RND.Next(Query.TaskSleep?[0] ?? 0, Query.TaskSleep?[1] ?? 0);
                                             Thread.Sleep(eachtaskRND * 1000);
                                         }
                                     }
@@ -215,7 +226,7 @@ namespace Seed
                             Log.Show("Seed", Query.Name, $"synced failed", ConsoleColor.Red);
 
                         Sync = await Bot.SeedGetBalance();
-                        if (Sync is not null)
+                        if (Sync != null)
                             Log.Show("Seed", Query.Name, $"B<{((double)Sync.Data / 1000000000d).ToString("N2")}>", ConsoleColor.Blue);
                     }
                     else
@@ -228,9 +239,9 @@ namespace Seed
 
                 int syncRND = 0;
                 if (DateTime.Now.Hour < 8)
-                    syncRND = RND.Next(Query.NightSleep[0], Query.NightSleep[1]);
+                    syncRND = RND.Next(Query.NightSleep?[0] ?? 0, Query.NightSleep?[1] ?? 0);
                 else
-                    syncRND = RND.Next(Query.DaySleep[0], Query.DaySleep[1]);
+                    syncRND = RND.Next(Query.DaySleep?[0] ?? 0, Query.DaySleep?[1] ?? 0);
                 Log.Show("Seed", Query.Name, $"sync sleep '{Convert.ToInt32(syncRND / 3600d)}h {Convert.ToInt32(syncRND % 3600 / 60d)}m {syncRND % 60}s'", ConsoleColor.Yellow);
                 Thread.Sleep(syncRND * 1000);
             }

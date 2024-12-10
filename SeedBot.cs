@@ -22,7 +22,7 @@ namespace Seed
             IPAddress = GetIP().Result;
             PubQuery.Auth = getSession();
             var GetUserDetail = SeedGetProfile2().Result;
-            if (GetUserDetail is not null)
+            if (GetUserDetail != null)
             {
                 UserDetail = GetUserDetail;
                 HasError = false;
@@ -54,13 +54,13 @@ namespace Seed
             {
                 client = new HttpClient() { Timeout = new TimeSpan(0, 0, 30) };
             }
-            HttpResponseMessage httpResponse = null;
+            HttpResponseMessage? httpResponse = null;
             try
             {
                 httpResponse = await client.GetAsync($"https://httpbin.org/ip");
             }
             catch { }
-            if (httpResponse is not null)
+            if (httpResponse != null)
             {
                 if (httpResponse.IsSuccessStatusCode)
                 {
@@ -88,7 +88,7 @@ namespace Seed
         {
             var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/profile2");
-            if (httpResponse is not null)
+            if (httpResponse != null)
             {
                 if (httpResponse.IsSuccessStatusCode)
                 {
@@ -105,7 +105,7 @@ namespace Seed
         {
             var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/profile/balance");
-            if (httpResponse is not null)
+            if (httpResponse != null)
             {
                 if (httpResponse.IsSuccessStatusCode)
                 {
@@ -122,13 +122,13 @@ namespace Seed
         {
             var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var loginBonuses = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/login-bonuses", null);
-            if (loginBonuses is not null)
+            if (loginBonuses != null)
             {
                 if (loginBonuses.IsSuccessStatusCode)
                 {
                     Thread.Sleep(3000);
                     var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/streak-reward");
-                    if (httpResponse is not null)
+                    if (httpResponse != null)
                     {
                         if (httpResponse.IsSuccessStatusCode)
                         {
@@ -150,7 +150,7 @@ namespace Seed
             string serializedRequest = JsonSerializer.Serialize(request);
             var serializedRequestContent = new StringContent(serializedRequest, Encoding.UTF8, "application/json");
             var httpResponse = await SAPI.SAPIPost("https://alb.seeddao.org/api/v1/streak-reward", serializedRequestContent);
-            if (httpResponse is not null)
+            if (httpResponse != null)
                 return httpResponse.IsSuccessStatusCode;
             else
                 return false;
@@ -170,7 +170,7 @@ namespace Seed
         {
             var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/worms");
-            if (httpResponse is not null)
+            if (httpResponse != null)
             {
                 if (httpResponse.IsSuccessStatusCode)
                 {
@@ -207,7 +207,7 @@ namespace Seed
         {
             var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/tasks/progresses");
-            if (httpResponse is not null)
+            if (httpResponse != null)
             {
                 if (httpResponse.IsSuccessStatusCode)
                 {
@@ -234,7 +234,7 @@ namespace Seed
         {
             var SAPI = new SeedApi(PubQuery.Auth, PubQuery.Index, PubProxy);
             var httpResponse = await SAPI.SAPIGet("https://alb.seeddao.org/api/v1/guild/member/detail");
-            if (httpResponse is not null)
+            if (httpResponse != null)
             {
                 if (httpResponse.IsSuccessStatusCode)
                 {
